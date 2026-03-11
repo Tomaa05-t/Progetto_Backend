@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Tracker Pro</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --dark: #2c3e50;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background: linear-gradient(135deg, #f0f2f5 0%, #dcdde1 100%);
+            margin: 0; padding: 40px 20px; min-height: 100vh;
+        }
+
+        .container { max-width: 1000px; margin: auto; }
+
+        h1 { text-align: center; color: var(--dark); margin-bottom: 30px; font-weight: 800; }
+
+        .search-box { 
+            background: var(--glass); padding: 20px; border-radius: 20px;
+            display: flex; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 16px; outline: none; }
+        button { padding: 15px 30px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        button:hover { transform: translateY(-2px); background: #27ae60; }
+
+        #results { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; margin-top: 40px; 
+        }
+
+        .card { 
+            background: white; border-radius: 20px; padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.4s; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; }
+
+        .tag-row { display: flex; gap: 10px; margin: 15px 0; }
+        .tag { background: #f0f0f0; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; }
+        
+        .btn-recipe { display: block; text-align: center; margin-top: 15px; padding: 10px; background: #3498db; color: white; border-radius: 10px; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🍏 Food Tracker Pro</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cerca ingredienti...">
+            <button onclick="searchFood()">Cerca</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function searchFood() {
+            const results = document.getElementById('results');
+            const query = document.getElementById('searchInput').value;
+            results.innerHTML = '<p style="text-align:center">Caricamento...</p>';
+            
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/api/search?query=${query}`);
+                const data = await res.json();
+                results.innerHTML = '';
+                
+                data.forEach(r => {
+                    results.innerHTML += `
+                        <div class="card">
+                            <img src="${r.image}" alt="${r.title}">
+                            <h3>${r.title}</h3>
+                            <div class="tag-row">
+                                <span class="tag">🔥 ${r.calories} kcal</span>
+                                <span class="tag">💪 ${r.protein}g Prot</span>
+                            </div>
+                            <a href="${r.source_url}" target="_blank" class="btn-recipe">Scopri Ricetta</a>
+                        </div>
+                    `;
+                });
+            } catch(e) {
+                results.innerHTML = '<p>Backend non raggiungibile.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
