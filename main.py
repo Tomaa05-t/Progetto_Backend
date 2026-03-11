@@ -66,3 +66,9 @@ def search_food(query: str): #definisco la funzione che accetta l'ingrediente co
     
     return cleaned_data
 
+@app.get("/api/recipe/{recipe_id}/instructions")
+def get_instructions(recipe_id: int):
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"
+    params = {"apiKey": API_KEY}
+    response = requests.get(url, params=params)
+    return response.json()
