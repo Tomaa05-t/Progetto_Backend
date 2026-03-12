@@ -2,7 +2,7 @@ import os
 import requests
 from fastapi import FastAPI, HTTPException #il motore che crea il server
 from fastapi.middleware.cors import CORSMiddleware 
-from dotenv import load_dotenv #serev a leggere l'api key
+from dotenv import load_dotenv #serve a leggere l'api key
 from deep_translator import GoogleTranslator #traduttore
 
 # carica la chiave segreta da .env
