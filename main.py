@@ -66,9 +66,27 @@ def search_food(query: str): #definisco la funzione che accetta l'ingrediente co
     
     return cleaned_data
 
-@app.get("/api/recipe/{recipe_id}/instructions")#mi serve per leggere nel mio sito le ricette date dall'api
-def get_instructions(recipe_id: int):#definisco la funzione che accetta l'id della ricetta come parametro
-    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"#preparo l'url per fare la richiesta alla API esterna, inserendo l'id della ricetta che mi è stato passato come parametro
-    params = {"apiKey": API_KEY}#preparo i parametri per la richiesta, la key
-    response = requests.get(url, params=params)#faccio la richiesta alla API esterna con i parametri che ho preparato
-    return response.json()#prendo i dati che mi ha restituito la API esterna e li trasformo in un formato che posso usare
+#@app.get("/api/recipe/{recipe_id}/instructions")#mi serve per leggere nel mio sito le ricette date dall'api
+#def get_instructions(recipe_id: int):#definisco la funzione che accetta l'id della ricetta come parametro
+ #   url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"#preparo l'url per fare la richiesta alla API esterna, inserendo l'id della ricetta che mi è stato passato come parametro
+   # params = {"apiKey": API_KEY}#preparo i parametri per la richiesta, la key
+   # response = requests.get(url, params=params)#faccio la richiesta alla API esterna con i parametri che ho preparato
+   # return response.json()#prendo i dati che mi ha restituito la API esterna e li trasformo in un formato che posso usare
+
+
+
+    @app.get("/api/recipe/{recipe_id}/instructions")
+def get_instructions(recipe_id: int):
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"
+    params = {"apiKey": API_KEY}
+    response = requests.get(url, params=params)
+    data = response.json()
+    
+    # Traduciamo i passaggi prima di inviarli
+    if data and isinstance(data, list):
+        for instruction in data:
+            for step in instruction.get("steps", []):
+                # Traduciamo solo il testo del passaggio
+                step["step"] = GoogleTranslator(source='en', target='it').translate(step["step"])
+                
+    return data
