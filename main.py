@@ -55,7 +55,7 @@ def search_food(query: str): #definisco la funzione che accetta l'ingrediente co
         calories = next((item["amount"] for item in nutrients if item["name"] == "Calories"), 0)#cerco nella lista dei nutrienti quello che si chiama "Calories" e prendo il suo valore, se non lo trovo metto 0
         protein = next((item["amount"] for item in nutrients if item["name"] == "Protein"), 0)
 
-        cleaned_data.append({ #
+        cleaned_data.append({ #creo un nuovo dizionario con solo le informazioni che mi interessano e lo aggiungo alla lista dei dati puliti
             "id": recipe["id"],
             "title": recipe["title"],
             "image": recipe.get("image", ""),
