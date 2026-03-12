@@ -95,34 +95,6 @@
                 results.innerHTML = '<p style="text-align:center">Ops! Server non raggiungibile.</p>';
             }
         }
-
-        async function openRecipe(id) {
-            const modal = document.getElementById('recipeModal');
-            const content = document.getElementById('modalContent');
-            modal.style.display = 'flex';
-            content.innerHTML = 'Caricamento istruzioni...';
-
-            try {
-                const res = await fetch(`https://progetto-backend-iqr5.onrender.com/api/recipe/${id}/instructions`);
-                const data = await res.json();
-                
-                let html = '<h2>Procedimento</h2>';
-                if (data.length > 0 && data[0].steps) {
-                    data[0].steps.forEach(step => {
-                        html += `<p><strong>Passo ${step.number}:</strong> ${step.step}</p>`;
-                    });
-                } else {
-                    html = '<p>Nessuna istruzione trovata.</p>';
-                }
-                content.innerHTML = html;
-            } catch(e) {
-                content.innerHTML = '<p>Errore nel caricamento.</p>';
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('recipeModal').style.display = 'none';
-        }
     </script>
 </body>
 </html>
