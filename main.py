@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException #il motore che crea il server
 from fastapi.middleware.cors import CORSMiddleware 
 from dotenv import load_dotenv #serve a leggere l'api key
 from deep_translator import GoogleTranslator #traduttore
+from fastapi.responses import FileResponse
 
 # carica la chiave segreta da .env
 load_dotenv()
@@ -66,9 +67,14 @@ def search_food(query: str): #definisco la funzione che accetta l'ingrediente co
     
     return cleaned_data
 
-@app.get("/api/recipe/{recipe_id}/instructions")#mi serve per leggere nel mio sito le ricette date dall'api
-def get_instructions(recipe_id: int):#definisco la funzione che accetta l'id della ricetta come parametro
-   url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"#preparo l'url per fare la richiesta alla API esterna, inserendo l'id della ricetta che mi è stato passato come parametro
-    params = {"apiKey": API_KEY}#preparo i parametri per la richiesta, la key
-    response = requests.get(url, params=params)#faccio la richiesta alla API esterna con i parametri che ho preparato
-    return response.json()#prendo i dati che mi ha restituito la API esterna e li trasformo in un formato che posso usare
+# Rotta Istruzioni: Recupera i passaggi della ricetta (JSON grezzo)
+@app.get("/api/recipe/{recipe_id}/instructions")
+def get_instructions(recipe_id: int):
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"
+    params = {"apiKey": API_KEY}
+    response = requests.get(url, params=params)
+    
+    if response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Impossibile recuperare le istruzioni")
+        
+    return response.json()
