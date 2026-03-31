@@ -24,9 +24,13 @@ app.add_middleware(
 )
 
 #controllo che il server sia attivo
-@app.get("/") #chiamo questa funzione quando inserisco l'url su internet
+#@app.get("/") #chiamo questa funzione quando inserisco l'url su internet
+#def read_root():
+ #   return {"message": "Il server del Food Tracker è attivo!"}
+
+@app.get("/")
 def read_root():
-    return {"message": "Il server del Food Tracker è attivo!"}
+    return FileResponse("index.html")
 
 @app.get("/api/search") #l'oggetto app che ho creato prima, quando riceve una richiesta GET sull'indirizzo /api/search deve eseguire la funzione search_food
 def search_food(query: str): #definisco la funzione che accetta l'ingrediente come parametro
