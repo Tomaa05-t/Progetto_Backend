@@ -83,8 +83,8 @@
             results.innerHTML = '<p style="text-align:center; width:100%">Cucino nuove idee per te...</p>';
             
             try {
-                // Cambia questa riga nel tuo <script>:
-                const res = await fetch(`/api/search?query=${query}`);
+// Assicurati che nel tuo index.html ci sia questo URL ESATTO:
+                const res = await fetch(`https://progetto-backend-iqr5.onrender.com/api/search?query=${query}`);
                 const data = await res.json();
                 results.innerHTML = '';
                 
