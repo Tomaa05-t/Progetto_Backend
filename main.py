@@ -23,10 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#controllo che il server sia attivo
-#@app.get("/") #chiamo questa funzione quando inserisco l'url su internet
-#def read_root():
- #   return {"message": "Il server del Food Tracker è attivo!"}
 
 @app.get("/")
 def read_root():
@@ -74,11 +70,11 @@ def search_food(query: str): #definisco la funzione che accetta l'ingrediente co
 # Rotta Istruzioni: Recupera i passaggi della ricetta (JSON grezzo)
 @app.get("/api/recipe/{recipe_id}/instructions")
 def get_instructions(recipe_id: int):
-    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions" #
     params = {"apiKey": API_KEY}
     response = requests.get(url, params=params)
     
-    if response.status_code != 200:
+    if response.status_code != 200: #controllo se la risposta è andata a buon fine, se no restituisco un errore al client
         raise HTTPException(status_code=500, detail="Impossibile recuperare le istruzioni")
         
     return response.json()
